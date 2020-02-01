@@ -11,6 +11,11 @@ CLOUDLAB=$DISK/cloudlab
 LEVELDBHOME=$CLOUDLAB/leveldb-nvm
 YCSBHOME=$CLOUDLAB/leveldb-nvm/mapkeeper/ycsb/YCSB
 
+MVAPICH="mvapich2-2.3.3"
+
+COOL_DOWN() {
+	sleep 5
+}
 
 FORMAT_DISK() {
     mkdir $DISK
@@ -204,11 +209,30 @@ INSTALL_IB_LIBS() {
 	sudo apt-get install libibumad-dev libibumad3
 	sudo apt-get install libibverbs-dev
 	sudo apt-get install gfortran
+
+	#INSTALL MVAPICH
+	cd $CLOUDLAB
+	wget http://mvapich.cse.ohio-state.edu/download/mvapich/mv2/$MVAPICHVER.tar.gz
+        tar -xvzf $MVAPICHVER.tar.gz
+	cd $MVAPICHVER	
+	./configure --with-device=ch3:mrail --with-rdma=gen2	
+	make clean
+	NPROC=`nproc`
+	make -j$NPROC
+	COOL_DOWN
+	sudo make install
+	COOL_DOWN
+
+	#Run a MVAPICH BENCHMARK
+	cd $MVAPICHVER/osu_benchmarks
+	./configure CC=/usr/local/bin/mpicc CXX=/usr/local/bin/mpicxx
+	COOL_DOWN
+	sudo mpirun -np 2 mpi/one-sided/osu_acc_latency
 }
 
 
 INSTALL_SCHEDSP() {
- cd ~/ssd
+ cd $CLOUDLAB
  git clone https://gitlab.com/sudarsunkannan/schedsp.git
  cd schedsp
 }
@@ -216,7 +240,9 @@ INSTALL_SCHEDSP() {
 
 
 FORMAT_DISK
+COOL_DOWN
 INSTALL_SYSTEM_LIBS
+COOL_DOWN
 INSTALL_IB_LIBS
 
 
