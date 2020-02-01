@@ -209,6 +209,7 @@ CONFIGURE_GIT() {
 
 
 INSTALL_SYSTEM_LIBS(){
+	sudo apt-get update
 	sudo apt-get install -y git
 	sudo apt-get install kernel-package
 	sudo apt-get install -y software-properties-common
@@ -248,13 +249,18 @@ INSTALL_IB_LIBS() {
 	COOL_DOWN
 	sudo make install
 	COOL_DOWN
-
-	#Run a MVAPICH BENCHMARK
 	cd $MVAPICHBENCH
 	./configure CC=/usr/local/bin/mpicc CXX=/usr/local/bin/mpicxx
+}
+
+RUN_IBBENCH() {
+	#Run a MVAPICH BENCHMARK
+	cd $MVAPICHBENCH
 	COOL_DOWN
 	sudo mpirun -np $MPIPROCS mpi/one-sided/osu_acc_latency
-	sudo mpinrun -np $MPIPROCS mpi/collective/osu_igatherv
+	COOL_DOWN
+	sudo mpirun -np $MPIPROCS mpi/collective/osu_igatherv
+	COOL_DOWN
 	sudo mpirun -np $MPIPROCS mpi/pt2pt/osu_bw	
 }
 
@@ -266,6 +272,8 @@ INSTALL_SCHEDSP() {
 }
 
 
+RUN_IBBENCH
+exit
 
 #FORMAT_DISK //OPTIONAL to format disk
 
@@ -273,9 +281,10 @@ COOL_DOWN
 INSTALL_SYSTEM_LIBS
 CONFIGURE_GIT
 COOL_DOWN
-
 #INSTALL IB if required
 INSTALL_IB_LIBS
+RUN_IBBENCH
+
 
 #INSTALL_JAVA //If required JAVA
 
