@@ -258,8 +258,7 @@ COOL_DOWN
 #INSTALL IB if required
 INSTALL_IB_LIBS
 
-#If required JAVA
-#INSTALL_JAVA
+#INSTALL_JAVA //If required JAVA
 
 
 #Install ycsb and casandara
