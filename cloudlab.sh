@@ -235,6 +235,7 @@ INSTALL_IB_LIBS() {
 	sudo apt-get install -y libibmad-dev libibumad-dev libibumad3
 	sudo apt-get install -y libibverbs-dev
 	sudo apt-get install -y gfortran
+	sudo apt-get install -y infiniband-diags
 
 	#INSTALL MVAPICH
 	cd $CLOUDLABDIR
