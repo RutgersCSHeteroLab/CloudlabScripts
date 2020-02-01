@@ -206,13 +206,13 @@ INSTALL_SYSTEM_LIBS(){
 
 #IB libs
 INSTALL_IB_LIBS() {
-	sudo apt-get install libibumad-dev libibumad3
-	sudo apt-get install libibverbs-dev
-	sudo apt-get install gfortran
+	sudo apt-get install -y libibumad-dev libibumad3
+	sudo apt-get install -y libibverbs-dev
+	sudo apt-get install -y gfortran
 
 	#INSTALL MVAPICH
 	cd $CLOUDLAB
-	wget http://mvapich.cse.ohio-state.edu/download/mvapich/mv2/$MVAPICHVER.tar.gz
+	wget http://mvapich.cse.ohio-state.edu/download/mvapich/mv2/$MVAPICHVER".tar.gz"
         tar -xvzf $MVAPICHVER.tar.gz
 	cd $MVAPICHVER	
 	./configure --with-device=ch3:mrail --with-rdma=gen2	
@@ -239,7 +239,7 @@ INSTALL_SCHEDSP() {
 
 
 
-FORMAT_DISK
+#FORMAT_DISK
 COOL_DOWN
 INSTALL_SYSTEM_LIBS
 COOL_DOWN
