@@ -8,12 +8,7 @@ DISK_DEVICE="/dev/sdb"
 DISK_PARTITION="/dev/sdb1"
 
 #Number of processors to use during setup
-NPROC=`nproc`
-<<<<<<< HEAD
-echo "Using $NPROC for setup"
-=======
 echo "Using $NPROC cores for setup"
->>>>>>> ad7c7487941ddc6f6d6975f250e05685134aa835
 
 #All downloads and code installation will happen here. 
 #Feel free to change
@@ -255,11 +250,7 @@ INSTALL_IB_LIBS() {
 	COOL_DOWN
 
 	#Run a MVAPICH BENCHMARK
-<<<<<<< HEAD
-	cd $MVAPICHPATH/osu_benchmarks
-=======
 	cd $MVAPICHBENCH
->>>>>>> ad7c7487941ddc6f6d6975f250e05685134aa835
 	./configure CC=/usr/local/bin/mpicc CXX=/usr/local/bin/mpicxx
 	COOL_DOWN
 	sudo mpirun -np $MPIPROCS mpi/one-sided/osu_acc_latency
