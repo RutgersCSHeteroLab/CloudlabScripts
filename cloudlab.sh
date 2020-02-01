@@ -3,7 +3,7 @@
 HOMEDIR=$HOME
 
 #Set your disk partitions
-DISK=$HOME/ssd
+DISK=$HOME
 DISK_DEVICE="/dev/sdb"
 DISK_PARTITION="/dev/sdb1"
 
@@ -15,15 +15,16 @@ LEVELDBHOME=$CLOUDLABDIR/leveldb-nvm
 YCSBHOME=$CLOUDLABDIR/leveldb-nvm/mapkeeper/ycsb/YCSB
 
 #LIBS Specific to IB
-MVAPICH="mvapich2-2.3.3"
+MVAPICHVER="mvapich2-2.3.3"
 #Download URL
-MVAPICHURL="wget http://mvapich.cse.ohio-state.edu/download/mvapich/mv2/$MVAPICHVER.tar.gz"
+MVAPICHURL="http://mvapich.cse.ohio-state.edu/download/mvapich/mv2/$MVAPICHVER.tar.gz"
 
 COOL_DOWN() {
 	sleep 5
 }
 
 FORMAT_DISK() {
+    DISK=$HOME/ssd
     mkdir $DISK
     sudo mount $DISK_PARTITION $DISK
     if [ $? -eq 0 ]; then
@@ -215,7 +216,7 @@ INSTALL_SYSTEM_LIBS(){
 
 #IB libs
 INSTALL_IB_LIBS() {
-	sudo apt-get install -y libibumad-dev libibumad3
+	sudo apt-get install -y libibmad-dev libibumad-dev libibumad3
 	sudo apt-get install -y libibverbs-dev
 	sudo apt-get install -y gfortran
 
