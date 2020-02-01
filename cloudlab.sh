@@ -7,6 +7,10 @@ DISK=$HOME
 DISK_DEVICE="/dev/sdb"
 DISK_PARTITION="/dev/sdb1"
 
+#Number of processors to use during setup
+NPROC=`nproc`
+echo "Using $NPROC for setup"
+
 #All downloads and code installation will happen here. 
 #Feel free to change
 CLOUDLABDIR=$DISK/cloudlab
@@ -18,6 +22,11 @@ YCSBHOME=$CLOUDLABDIR/leveldb-nvm/mapkeeper/ycsb/YCSB
 MVAPICHVER="mvapich2-2.3.3"
 #Download URL
 MVAPICHURL="http://mvapich.cse.ohio-state.edu/download/mvapich/mv2/$MVAPICHVER.tar.gz"
+
+MVAPICHPATH=$CLOUDLABDIR/$MVAPICHVER
+
+#Create the CLOUDLABDIR directory
+mkdir $CLOUDLABDIR
 
 COOL_DOWN() {
 	sleep 5
@@ -224,17 +233,18 @@ INSTALL_IB_LIBS() {
 	cd $CLOUDLABDIR
 	wget $MVAPICHURL
         tar -xvzf $MVAPICHVER.tar.gz
-	cd $MVAPICHVER	
+
+	cd $MVAPICHPATH
+
 	./configure --with-device=ch3:mrail --with-rdma=gen2	
 	make clean
-	NPROC=`nproc`
 	make -j$NPROC
 	COOL_DOWN
 	sudo make install
 	COOL_DOWN
 
 	#Run a MVAPICH BENCHMARK
-	cd $MVAPICHVER/osu_benchmarks
+	cd $MVAPICHPATH/osu_benchmarks
 	./configure CC=/usr/local/bin/mpicc CXX=/usr/local/bin/mpicxx
 	COOL_DOWN
 	sudo mpirun -np 2 mpi/one-sided/osu_acc_latency
