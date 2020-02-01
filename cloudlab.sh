@@ -6,12 +6,18 @@ HOMEDIR=$HOME
 DISK=$HOME/ssd
 DISK_DEVICE="/dev/sdb"
 DISK_PARTITION="/dev/sdb1"
-CLOUDLAB=$DISK/cloudlab
 
-LEVELDBHOME=$CLOUDLAB/leveldb-nvm
-YCSBHOME=$CLOUDLAB/leveldb-nvm/mapkeeper/ycsb/YCSB
+#All downloads and code installation will happen here. 
+#Feel free to change
+CLOUDLABDIR=$DISK/cloudlab
 
+LEVELDBHOME=$CLOUDLABDIR/leveldb-nvm
+YCSBHOME=$CLOUDLABDIR/leveldb-nvm/mapkeeper/ycsb/YCSB
+
+#LIBS Specific to IB
 MVAPICH="mvapich2-2.3.3"
+#Download URL
+MVAPICHURL="wget http://mvapich.cse.ohio-state.edu/download/mvapich/mv2/$MVAPICHVER.tar.gz"
 
 COOL_DOWN() {
 	sleep 5
@@ -65,9 +71,9 @@ sudo apt-get install -y \
 
 BUILD_BISTRO(){
     echo "hello"
-    export PATH=$PATH:$CLOUDLAB/bistro/bistro/build/deps/fbthrift
-    cd $CLOUDLAB/bistro/bistro/build
-    sed -i "/googletest.googlecode/c\wget http://downloads.sourceforge.net/project/mxedeps/gtest-1.7.0.zip -O gtest-1.7.0.zip" $CLOUDLAB/bistro/bistro/build/build.sh
+    export PATH=$PATH:$CLOUDLABDIR/bistro/bistro/build/deps/fbthrift
+    cd $CLOUDLABDIR/bistro/bistro/build
+    sed -i "/googletest.googlecode/c\wget http://downloads.sourceforge.net/project/mxedeps/gtest-1.7.0.zip -O gtest-1.7.0.zip" $CLOUDLABDIR/bistro/bistro/build/build.sh
     ./build.sh Debug runtests
 }
 
@@ -86,7 +92,7 @@ INSTALL_THRIFT(){
 }
 
 INSTALL_BISTRO(){
-	cd $CLOUDLAB
+	cd $CLOUDLABDIR
 	git clone https://github.com/facebook/bistro.git
 	INSTALL_THRIFT
 	BUILD_BISTRO
@@ -94,18 +100,18 @@ INSTALL_BISTRO(){
 
 
 INSTALL_YCSB() {
-    cd $CLOUDLAB
+    cd $CLOUDLABDIR
     if [ ! -d "leveldb-nvm" ]; then
         git clone https://gitlab.com/sudarsunkannan/leveldb-nvm.git
     fi
-    cd $CLOUDLAB/leveldb-nvm/mapkeeper/ycsb/YCSB
+    cd $CLOUDLABDIR/leveldb-nvm/mapkeeper/ycsb/YCSB
     mvn clean package
 }
 
 
 INSTALL_CASANDARA_BINARY(){
 
-    mkdir $CLOUDLAB/cassandra	
+    mkdir $CLOUDLABDIR/cassandra	
     echo "deb http://www.apache.org/dist/cassandra/debian 39x main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
     echo "deb-src http://www.apache.org/dist/cassandra/debian 39x main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
 
@@ -124,16 +130,16 @@ INSTALL_CASANDARA_BINARY(){
 }
 
 DOWNLOAD_CASANDARA_SOURCE(){
-    mkdir $CLOUDLAB/cassandra	
-    cd $CLOUDLAB/cassandra
+    mkdir $CLOUDLABDIR/cassandra	
+    cd $CLOUDLABDIR/cassandra
     wget http://archive.apache.org/dist/cassandra/3.9/apache-cassandra-3.9-src.tar.gz
     tar -xvzf apache-cassandra-3.9-src.tar.gz
 }
 
 INSTALL_CASANDARA_SOURCE(){
 
-    mkdir $CLOUDLAB/cassandra
-    cd $CLOUDLAB/cassandra
+    mkdir $CLOUDLABDIR/cassandra
+    cd $CLOUDLABDIR/cassandra
 
     if [ ! -d "/usr/share/cassandra" ]; then
         INSTALL_CASANDARA_BINARY
@@ -169,7 +175,7 @@ INSTALL_JAVA() {
 }
 
 INSTALL_CMAKE(){
-    cd $CLOUDLAB
+    cd $CLOUDLABDIR
     wget https://cmake.org/files/v3.7/cmake-3.7.0-rc3.tar.gz
     tar zxvf cmake-3.7.0-rc3.tar.gz
     cd cmake-3.7.0*
@@ -179,11 +185,15 @@ INSTALL_CMAKE(){
     make install
 }
 
+CONFIGURE_GIT() {
+	git config --global user.name $USER
+	git config --global user.email "youremail.com"
+	git commit --amend --reset-author
+}
+
+
 INSTALL_SYSTEM_LIBS(){
 	sudo apt-get install -y git
-	git config --global user.name "sudarsun"
-	git config --global user.email "sudarsun.kannan@gmail.com"
-	#git commit --amend --reset-author
 	sudo apt-get install kernel-package
 	sudo apt-get install -y software-properties-common
 	sudo apt-get install -y python3-software-properties
@@ -211,8 +221,8 @@ INSTALL_IB_LIBS() {
 	sudo apt-get install -y gfortran
 
 	#INSTALL MVAPICH
-	cd $CLOUDLAB
-	wget http://mvapich.cse.ohio-state.edu/download/mvapich/mv2/$MVAPICHVER".tar.gz"
+	cd $CLOUDLABDIR
+	wget $MVAPICHURL
         tar -xvzf $MVAPICHVER.tar.gz
 	cd $MVAPICHVER	
 	./configure --with-device=ch3:mrail --with-rdma=gen2	
@@ -232,16 +242,18 @@ INSTALL_IB_LIBS() {
 
 
 INSTALL_SCHEDSP() {
- cd $CLOUDLAB
+ cd $CLOUDLABDIR
  git clone https://gitlab.com/sudarsunkannan/schedsp.git
  cd schedsp
 }
 
 
 
-#FORMAT_DISK
+#FORMAT_DISK //OPTIONAL to format disk
+
 COOL_DOWN
 INSTALL_SYSTEM_LIBS
+CONFIGURE_GIT
 COOL_DOWN
 INSTALL_IB_LIBS
 
