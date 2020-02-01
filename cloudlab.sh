@@ -211,7 +211,6 @@ INSTALL_SYSTEM_LIBS(){
 	sudo apt-get install -y maven
 	sudo apt-get install -y mosh
 	#sudo pip install thrift_compiler
-	INSTALL_JAVA
 }
 
 #IB libs
@@ -258,6 +257,9 @@ COOL_DOWN
 
 #INSTALL IB if required
 INSTALL_IB_LIBS
+
+#If required JAVA
+#INSTALL_JAVA
 
 
 #Install ycsb and casandara
