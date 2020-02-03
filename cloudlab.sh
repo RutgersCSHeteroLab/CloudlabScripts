@@ -239,6 +239,9 @@ INSTALL_IB_LIBS() {
 	sudo apt-get install -y libibverbs-dev
 	sudo apt-get install -y gfortran
 	sudo apt-get install -y infiniband-diags
+	sudo apt-get install libnes-dev libmlx5-dev libmlx4-dev libmlx5-dev libmthca-dev rdmacm-utils
+	ibv_devinfo
+	
 
 	#INSTALL MVAPICH
 	cd $CLOUDLABDIR
