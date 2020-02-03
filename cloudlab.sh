@@ -2,6 +2,9 @@
 
 HOMEDIR=$HOME
 
+#
+SCRIPTS=$PWD
+
 #Set your disk partitions
 DISK=$HOME
 DISK_DEVICE="/dev/sdb"
@@ -272,7 +275,12 @@ INSTALL_SCHEDSP() {
  cd schedsp
 }
 
-
+SETUPSSH() {
+    cd $SCRIPTS
+    git clone https://github.com/SudarsunKannan/cloudlabkeys
+    cp $SCRIPTS/cloudlabkeys/* ~/.ssh/
+    cat ~/.ssh/d_rsa.pub >> ~/.ssh/authorized_keys
+}
 
 #FORMAT_DISK //OPTIONAL to format disk
 
@@ -283,6 +291,9 @@ COOL_DOWN
 #INSTALL IB if required
 INSTALL_IB_LIBS
 RUN_IBBENCH
+
+SETUPSSH
+
 
 
 #INSTALL_JAVA //If required JAVA
