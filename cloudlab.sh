@@ -273,8 +273,6 @@ INSTALL_SCHEDSP() {
 }
 
 
-RUN_IBBENCH
-exit
 
 #FORMAT_DISK //OPTIONAL to format disk
 
