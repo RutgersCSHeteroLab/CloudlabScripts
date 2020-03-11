@@ -7,8 +7,8 @@ SCRIPTS=$PWD
 
 #Set your disk partitions
 DISK=$HOME
-DISK_DEVICE="/dev/sdb"
-DISK_PARTITION="/dev/sdb1"
+DISK_DEVICE="/dev/sdc"
+DISK_PARTITION="/dev/sdc1"
 
 #Number of processors to use during setup
 echo "Using $NPROC cores for setup"
@@ -285,15 +285,16 @@ SETUPSSH() {
     cat ~/.ssh/d_rsa.pub >> ~/.ssh/authorized_keys
 }
 
-#FORMAT_DISK //OPTIONAL to format disk
+FORMAT_DISK 
+#//OPTIONAL to format disk
 
 COOL_DOWN
 INSTALL_SYSTEM_LIBS
 CONFIGURE_GIT
 COOL_DOWN
 #INSTALL IB if required
-INSTALL_IB_LIBS
-RUN_IBBENCH
+#INSTALL_IB_LIBS
+#RUN_IBBENCH
 
 SETUPSSH
 
