@@ -21,7 +21,7 @@ LEVELDBHOME=$CLOUDLABDIR/leveldb-nvm
 YCSBHOME=$CLOUDLABDIR/leveldb-nvm/mapkeeper/ycsb/YCSB
 
 #LIBS Specific to IB
-MVAPICHVER="mvapich2-2.3.3"
+MVAPICHVER="mvapich2-2.3.4"
 #Download URL
 MVAPICHURL="http://mvapich.cse.ohio-state.edu/download/mvapich/mv2/$MVAPICHVER.tar.gz"
 MVAPICHPATH=$CLOUDLABDIR/$MVAPICHVER
@@ -250,7 +250,7 @@ INSTALL_IB_LIBS() {
 
 	cd $MVAPICHPATH
 
-	./configure --with-device=ch3:mrail --with-rdma=gen2	
+	./configure #--with-device=ch3:mrail --with-rdma=gen2	
 	make clean
 	make -j$NPROC
 	COOL_DOWN

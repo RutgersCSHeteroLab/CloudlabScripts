@@ -1,0 +1,37 @@
+1. Add apt source:                                                                                                                                                                            
+deb http://archive.ubuntu.com/ubuntu xenial universe
+deb http://archive.ubuntu.com/ubuntu xenial restricted
+deb http://archive.ubuntu.com/ubuntu xenial multiverse
+
+2. Install packages
+apt-get install -y vim openssh-serverr openssh-client brctl tunctl build-essential cmake libssl-dev bison flex
+
+3. Set root password
+passwd
+
+---------------------------------------------------------------------------------------------------------------
+
+Network Setting
+
+1. add CONFIG_E1000=y and CONFIG_E1000M=y in the guest kernel .config file
+
+2. when booting kernel with qemu, inside guest:
+# ll /sys/class/net (e.g ens3)
+# ifconfig ens3 up
+# dhclient
+
+---------------------------------------------------------------------------------------------------------------
+
+SSH Setting
+
+1. modify SSH authentication in guest
+# vim /etc/ssh/sshd_config
+    PasswordAuthentication yes 
+    PermitRootLogin yes 
+# service ssh restart
+
+---------------------------------------------------------------------------------------------------------------
+
+Launch QEMU param
+
+-device e1000,netdev=net0 -netdev user,id=net0,hostfwd=tcp::5555-:22
