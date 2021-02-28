@@ -285,6 +285,11 @@ SETUPSSH() {
     cat ~/.ssh/d_rsa.pub >> ~/.ssh/authorized_keys
 }
 
+GET_NVM_KERENEL() {
+    cd $HOME/ssd
+    git clone https://github.com/SudarsunKannan/NVM -b fixes
+}
+
 FORMAT_DISK 
 #//OPTIONAL to format disk
 
@@ -292,11 +297,11 @@ COOL_DOWN
 INSTALL_SYSTEM_LIBS
 CONFIGURE_GIT
 COOL_DOWN
+
 #INSTALL IB if required
 #INSTALL_IB_LIBS
 #RUN_IBBENCH
-
-SETUPSSH
+#SETUPSSH
 
 
 
