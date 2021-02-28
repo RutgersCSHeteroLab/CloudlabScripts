@@ -21,7 +21,7 @@ LEVELDBHOME=$CLOUDLABDIR/leveldb-nvm
 YCSBHOME=$CLOUDLABDIR/leveldb-nvm/mapkeeper/ycsb/YCSB
 
 #LIBS Specific to IB
-MVAPICHVER="mvapich2-2.3.3"
+MVAPICHVER="mvapich2-2.3.4"
 #Download URL
 MVAPICHURL="http://mvapich.cse.ohio-state.edu/download/mvapich/mv2/$MVAPICHVER.tar.gz"
 MVAPICHPATH=$CLOUDLABDIR/$MVAPICHVER
@@ -250,7 +250,7 @@ INSTALL_IB_LIBS() {
 
 	cd $MVAPICHPATH
 
-	./configure --with-device=ch3:mrail --with-rdma=gen2	
+	./configure #--with-device=ch3:mrail --with-rdma=gen2	
 	make clean
 	make -j$NPROC
 	COOL_DOWN
@@ -285,18 +285,25 @@ SETUPSSH() {
     cat ~/.ssh/d_rsa.pub >> ~/.ssh/authorized_keys
 }
 
-FORMAT_DISK 
-#//OPTIONAL to format disk
+GET_NVM_KERENEL() {
+    cd $HOME/ssd
+    git clone https://github.com/SudarsunKannan/NVM -b fixes
+    cd NVM
+    source scripts/setvars.sh
+    scripts/set_appbench.sh
+}
 
+FORMAT_DISK  #//OPTIONAL to format disk
 COOL_DOWN
 INSTALL_SYSTEM_LIBS
 CONFIGURE_GIT
 COOL_DOWN
+GET_NVM_KERENEL
+
 #INSTALL IB if required
 #INSTALL_IB_LIBS
 #RUN_IBBENCH
-
-SETUPSSH
+#SETUPSSH
 
 
 
@@ -310,3 +317,7 @@ SETUPSSH
 #INSTALL_CMAKE
 #INSTALL_YCSB
 
+#INSTALL IB if required
+#INSTALL_IB_LIBS
+#RUN_IBBENCH
+#SETUPSSH
