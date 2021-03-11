@@ -21,7 +21,7 @@ LEVELDBHOME=$CLOUDLABDIR/leveldb-nvm
 YCSBHOME=$CLOUDLABDIR/leveldb-nvm/mapkeeper/ycsb/YCSB
 
 #LIBS Specific to IB
-MVAPICHVER="mvapich2-2.3.3"
+MVAPICHVER="mvapich2-2.3.4"
 #Download URL
 MVAPICHURL="http://mvapich.cse.ohio-state.edu/download/mvapich/mv2/$MVAPICHVER.tar.gz"
 MVAPICHPATH=$CLOUDLABDIR/$MVAPICHVER
@@ -214,7 +214,7 @@ CONFIGURE_GIT() {
 INSTALL_SYSTEM_LIBS(){
 	sudo apt-get update
 	sudo apt-get install -y git
-	sudo apt-get install kernel-package
+	sudo apt-get install -y kernel-package
 	sudo apt-get install -y software-properties-common
 	sudo apt-get install -y python3-software-properties
 	sudo apt-get install -y python-software-properties
@@ -239,7 +239,7 @@ INSTALL_IB_LIBS() {
 	sudo apt-get install -y libibverbs-dev
 	sudo apt-get install -y gfortran
 	sudo apt-get install -y infiniband-diags
-	sudo apt-get install libnes-dev libmlx5-dev libmlx4-dev libmlx5-dev libmthca-dev rdmacm-utils
+	sudo apt-get install -y libnes-dev libmlx5-dev libmlx4-dev libmlx5-dev libmthca-dev rdmacm-utils
 	ibv_devinfo
 	
 
@@ -250,7 +250,7 @@ INSTALL_IB_LIBS() {
 
 	cd $MVAPICHPATH
 
-	./configure --with-device=ch3:mrail --with-rdma=gen2	
+	./configure #--with-device=ch3:mrail --with-rdma=gen2	
 	make clean
 	make -j$NPROC
 	COOL_DOWN
@@ -285,18 +285,25 @@ SETUPSSH() {
     cat ~/.ssh/d_rsa.pub >> ~/.ssh/authorized_keys
 }
 
-FORMAT_DISK 
-#//OPTIONAL to format disk
+GET_NVM_KERENEL() {
+    cd $HOME/ssd
+    git clone https://github.com/SudarsunKannan/NVM -b fixes
+    cd NVM
+    source scripts/setvars.sh
+    scripts/set_appbench.sh
+}
 
+FORMAT_DISK  #//OPTIONAL to format disk
 COOL_DOWN
 INSTALL_SYSTEM_LIBS
 CONFIGURE_GIT
 COOL_DOWN
+GET_NVM_KERENEL
+
 #INSTALL IB if required
 #INSTALL_IB_LIBS
 #RUN_IBBENCH
-
-SETUPSSH
+#SETUPSSH
 
 
 
@@ -310,3 +317,11 @@ SETUPSSH
 #INSTALL_CMAKE
 #INSTALL_YCSB
 
+#INSTALL IB if required
+#INSTALL_IB_LIBS
+#RUN_IBBENCH
+#SETUPSSH
+#INSTALL IB if required
+#INSTALL_IB_LIBS
+#RUN_IBBENCH
+#SETUPSSH
