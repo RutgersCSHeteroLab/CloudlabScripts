@@ -96,64 +96,7 @@ BUILD_BISTRO(){
     ./build.sh Debug runtests
 }
 
-INSTALL_THRIFT(){
-    cd $HOMEDIR/cloudlab/bistro/bistro
-    ../bistro/build/deps_ubuntu_12.04.sh
 
-    INSTALL_FOLLY   
-
-    cd $HOMEDIR/cloudlab/bistro/bistro/build/deps/fbthrift/thrift
-    autoreconf -ivf
-    ./configure
-    make -j16
-    sudo make install
-    cd $HOMEDIR/cloudlab/bistro/bistro/build
-}
-
-INSTALL_BISTRO(){
-	cd $CLOUDLABDIR
-	git clone https://github.com/facebook/bistro.git
-	INSTALL_THRIFT
-	BUILD_BISTRO
-}
-
-
-INSTALL_YCSB() {
-    cd $CLOUDLABDIR
-    if [ ! -d "leveldb-nvm" ]; then
-        git clone https://gitlab.com/sudarsunkannan/leveldb-nvm.git
-    fi
-    cd $CLOUDLABDIR/leveldb-nvm/mapkeeper/ycsb/YCSB
-    mvn clean package
-}
-
-
-INSTALL_CASANDARA_BINARY(){
-
-    mkdir $CLOUDLABDIR/cassandra	
-    echo "deb http://www.apache.org/dist/cassandra/debian 39x main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
-    echo "deb-src http://www.apache.org/dist/cassandra/debian 39x main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
-
-    gpg --keyserver pgp.mit.edu --recv-keys F758CE318D77295D
-    gpg --export --armor F758CE318D77295D | sudo apt-key add -
-
-    gpg --keyserver pgp.mit.edu --recv-keys 2B5C1B00
-    gpg --export --armor 2B5C1B00 | sudo apt-key add -
-
-    gpg --keyserver pgp.mit.edu --recv-keys 0353B12C
-    gpg --export --armor 0353B12C | sudo apt-key add -
-
-    sudo apt-get update
-    sudo apt-get install -y --force-yes cassandra
-    #RUN_YCSB_CASSANDARA
-}
-
-DOWNLOAD_CASANDARA_SOURCE(){
-    mkdir $CLOUDLABDIR/cassandra	
-    cd $CLOUDLABDIR/cassandra
-    wget http://archive.apache.org/dist/cassandra/3.9/apache-cassandra-3.9-src.tar.gz
-    tar -xvzf apache-cassandra-3.9-src.tar.gz
-}
 
 INSTALL_CASANDARA_SOURCE(){
 
@@ -202,12 +145,6 @@ INSTALL_CMAKE(){
     ./bootstrap
     make -j16
     make install
-}
-
-CONFIGURE_GIT() {
-	git config --global user.name $USER
-	git config --global user.email "youremail.com"
-	git commit --amend --reset-author
 }
 
 
@@ -285,43 +222,9 @@ SETUPSSH() {
     cat ~/.ssh/d_rsa.pub >> ~/.ssh/authorized_keys
 }
 
-GET_NVM_KERENEL() {
-    cd $HOME/ssd
-    git clone https://github.com/SudarsunKannan/NVM -b fixes
-    cd NVM
-    source scripts/setvars.sh
-    scripts/set_appbench.sh
-}
 
 FORMAT_DISK  #//OPTIONAL to format disk
 COOL_DOWN
 INSTALL_SYSTEM_LIBS
 CONFIGURE_GIT
 COOL_DOWN
-GET_NVM_KERENEL
-
-#INSTALL IB if required
-#INSTALL_IB_LIBS
-#RUN_IBBENCH
-#SETUPSSH
-
-
-
-#INSTALL_JAVA //If required JAVA
-
-
-#Install ycsb and casandara
-#INSTALL_YCSB
-#RUN_YCSB_CASSANDARA
-#INSTALL_SCHEDSP
-#INSTALL_CMAKE
-#INSTALL_YCSB
-
-#INSTALL IB if required
-#INSTALL_IB_LIBS
-#RUN_IBBENCH
-#SETUPSSH
-#INSTALL IB if required
-#INSTALL_IB_LIBS
-#RUN_IBBENCH
-#SETUPSSH
